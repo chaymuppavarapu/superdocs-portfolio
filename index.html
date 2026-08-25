@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — DocTask & Growth Machine</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #fafafa;
+    --surface: #ffffff;
+    --surface-hover: #f5f5f5;
+    --border: #e5e5e5;
+    --text-primary: #171717;
+    --text-secondary: #525252;
+    --text-tertiary: #737373;
+    --text-quaternary: #a3a3a3;
+    --accent: #2563eb;
+    --accent-light: #3b82f6;
+    --positive: #16a34a;
+    --warning: #ca8a04;
+    --danger: #dc2626;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 12px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-lg: 0 10px 40px rgba(0,0,0,0.08);
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, monospace;
+    --transition: 0.15s ease-out;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0a0a0a;
+      --surface: #171717;
+      --surface-hover: #262626;
+      --border: #262626;
+      --text-primary: #f5f5f5;
+      --text-secondary: #a3a3a3;
+      --text-tertiary: #737373;
+      --text-quaternary: #525252;
+      --accent: #3b82f6;
+      --accent-light: #60a5fa;
+    }
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Navigation */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-brand {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+  }
+  .nav-links {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: color var(--transition);
+  }
+  .nav-links a:hover { color: var(--text-primary); text-decoration: none; }
+
+  /* Hero */
+  .hero {
+    text-align: center;
+    padding: 80px 24px 48px;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--positive) 10%, transparent);
+    color: var(--positive);
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    border: 1px solid color-mix(in srgb, var(--positive) 20%, transparent);
+  }
+  .hero h1 {
+    font-size: 42px;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .hero p {
+    font-size: 17px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    max-width: 520px;
+    margin: 0 auto 28px;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+    border: 1px solid transparent;
+  }
+  .btn-primary {
+    background: var(--text-primary);
+    color: var(--bg);
+    border-color: var(--text-primary);
+  }
+  .btn-primary:hover {
+    background: var(--text-secondary);
+    border-color: var(--text-secondary);
+    text-decoration: none;
+  }
+  .btn-secondary {
+    background: var(--surface);
+    color: var(--text-primary);
+    border-color: var(--border);
+  }
+  .btn-secondary:hover {
+    background: var(--surface-hover);
+    border-color: var(--text-tertiary);
+    text-decoration: none;
+  }
+
+  /* Section */
+  .section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+  .section-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 16px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  /* Project cards */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 640px) {
+    .projects-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 32px; }
+  }
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    transition: all var(--transition);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity var(--transition);
+  }
+  .project-card:hover {
+    border-color: var(--text-tertiary);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+  }
+  .project-card:hover::before { opacity: 1; }
+  .project-card.active::before { opacity: 1; }
+  .project-card.active { border-color: var(--accent); }
+  .project-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .project-card h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .project-card p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+  .project-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--text-tertiary);
+  }
+  .project-meta span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* Detail panel */
+  .detail-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    margin-top: 16px;
+    animation: fadeIn 0.3s ease-out;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .detail-panel h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+  }
+  .detail-panel .subtitle {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+  }
+  .detail-section {
+    margin-bottom: 28px;
+  }
+  .detail-section:last-child { margin-bottom: 0; }
+  .detail-section h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+  }
+  .detail-section p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  .detail-section p strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  /* Pipeline */
+  .pipeline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    padding: 16px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .pipe-step {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+  .pipe-arrow {
+    color: var(--text-quaternary);
+    font-size: 12px;
+    padding: 0 2px;
+  }
+
+  /* Feature grid */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 640px) { .features-grid { grid-template-columns: 1fr; } }
+  .feat-item {
+    padding: 16px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: var(--bg);
+    transition: all var(--transition);
+  }
+  .feat-item:hover {
+    border-color: var(--text-tertiary);
+    background: var(--surface-hover);
+  }
+  .feat-item h5 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text-primary);
+  }
+  .feat-item p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* Quote block */
+  .quote-block {
+    padding: 20px 24px;
+    border-radius: var(--radius-lg);
+    border-left: 3px solid var(--text-primary);
+    background: var(--bg);
+    margin-top: 8px;
+  }
+  .quote-block p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    font-style: italic;
+  }
+  .quote-block .attrib {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-top: 8px;
+    font-style: normal;
+  }
+
+  /* Verification table */
+  .verify-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .verify-table th {
+    text-align: left;
+    padding: 8px 12px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .verify-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+  .verify-table tr:last-child td { border-bottom: none; }
+  .verify-table tr:hover td { background: var(--surface-hover); }
+  .status-pass {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--positive) 10%, transparent);
+    color: var(--positive);
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .status-warn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--warning) 10%, transparent);
+    color: var(--warning);
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  /* Tech chips */
+  .tech-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tech-chip {
+    padding: 5px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--bg);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all var(--transition);
+  }
+  .tech-chip:hover {
+    border-color: var(--text-tertiary);
+    color: var(--text-primary);
+    background: var(--surface-hover);
+  }
+
+  /* Architecture */
+  .arch-diagram {
+    padding: 20px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .arch-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .arch-row:last-child { margin-bottom: 0; }
+  .arch-box {
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    min-width: 110px;
+    transition: all var(--transition);
+  }
+  .arch-box:hover { border-color: var(--text-tertiary); }
+  .arch-box.primary {
+    border-color: var(--text-primary);
+    background: var(--surface-hover);
+    font-weight: 600;
+  }
+  .arch-connector {
+    width: 20px;
+    height: 1px;
+    background: var(--border);
+    position: relative;
+    flex-shrink: 0;
+  }
+  .arch-connector::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: -2.5px;
+    width: 0;
+    height: 0;
+    border-left: 4px solid var(--border);
+    border-top: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+  }
+  .arch-vline {
+    width: 1px;
+    height: 14px;
+    background: var(--border);
+    margin: 0 auto;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 40px 24px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text-quaternary);
+  }
+
+  /* Hidden by default */
+  .project-detail { display: none; }
+  .project-detail.active { display: block; }
+
+  /* SVG icons inline */
+  .icon { width: 16px; height: 16px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-brand">Portfolio</div>
+    <ul class="nav-links">
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-badge">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    2 projects · 28+ tests · Production-ready systems
+  </div>
+  <h1>Engineering Portfolio</h1>
+  <p>Evidence-grounded systems built with structured workflows, human-in-the-loop review, and deterministic processing. From document intelligence to outbound research automation.</p>
+  <div class="hero-actions">
+    <a href="#doctask" class="btn btn-primary" onclick="showProject('doctask'); return false;">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      View DocTask
+    </a>
+    <a href="#growth" class="btn btn-secondary" onclick="showProject('growth'); return false;">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      View Growth Machine
+    </a>
+  </div>
+</section>
+
+<!-- Projects Grid -->
+<section class="section" id="projects">
+  <div class="section-title">Selected work</div>
+  <div class="projects-grid">
+    <div class="project-card" id="card-doctask" onclick="showProject('doctask')">
+      <div class="project-tag">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Document Intelligence
+      </div>
+      <h3>DocTask</h3>
+      <p>Transforms scattered project documents into structured, traceable, and reviewable project knowledge with evidence-grounded retrieval and conflict detection.</p>
+      <div class="project-meta">
+        <span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> FastAPI + LangGraph</span>
+        <span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> 28 tests</span>
+      </div>
+    </div>
+    <div class="project-card" id="card-growth" onclick="showProject('growth')">
+      <div class="project-tag" style="background: color-mix(in srgb, #7c3aed 10%, transparent); color: #7c3aed; border-color: color-mix(in srgb, #7c3aed 20%, transparent);">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Outbound Research
+      </div>
+      <h3>Growth Machine</h3>
+      <p>Evidence-driven outbound research system that ingests public company signals, forms grounded pain hypotheses, and produces personalized artifacts for human review.</p>
+      <div class="project-meta">
+        <span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Python pipeline</span>
+        <span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Validated</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DocTask Detail -->
+  <div class="project-detail" id="detail-doctask">
+    <div class="detail-panel">
+      <h2>DocTask</h2>
+      <p class="subtitle">Evidence-grounded project intelligence system</p>
+
+      <div class="detail-section">
+        <h4>What I built</h4>
+        <p>DocTask transforms scattered project documents—plans, sprint updates, milestone notes, and follow-ups—into <strong>structured, traceable, and reviewable project knowledge</strong>. The system treats documents as the source of truth, extracting structured facts, detecting contradictions across sources, and preserving complete evidence chains so that every conclusion in the final report can be traced back to the original material.</p>
+      </div>
+
+      <div class="detail-section">
+        <h4>Core workflow</h4>
+        <div class="pipeline">
+          <span class="pipe-step">Ingestion</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-step">Chunking</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-step">Embedding</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-step">Retrieval</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-step">Extraction</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-step">Normalization</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-step">Conflict detection</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-step">Human review</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-step">Draft report</span>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h4>Key capabilities</h4>
+        <div class="features-grid">
+          <div class="feat-item">
+            <h5>Semantic retrieval</h5>
+            <p>Project-scoped vector search over indexed chunks using local embeddings, retrieving only relevant evidence instead of the full corpus.</p>
+          </div>
+          <div class="feat-item">
+            <h5>Structured extraction</h5>
+            <p>Groq-backed agent returns strict JSON facts with subject, type, value, temporal status, source document, and supporting evidence.</p>
+          </div>
+          <div class="feat-item">
+            <h5>Conflict detection</h5>
+            <p>Contradictory values across sources are surfaced for review rather than silently merged. Distinguishes contradiction from historical change.</p>
+          </div>
+          <div class="feat-item">
+            <h5>Incremental updates</h5>
+            <p>New documents trigger targeted re-extraction. Unaffected facts remain intact, preserving previously accepted decisions.</p>
+          </div>
+          <div class="feat-item">
+            <h5>Audit trail</h5>
+            <p>Every change is recorded with old value, new value, source, review status, and timestamp. Complete evidence chain from report to original document.</p>
+          </div>
+          <div class="feat-item">
+            <h5>Crash recovery</h5>
+            <p>Completed stages persist to PostgreSQL. Interrupted runs resume from the incomplete stage rather than restarting from scratch.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h4>System architecture</h4>
+        <div class="arch-diagram">
+          <div class="arch-row">
+            <div class="arch-box">React dashboard</div>
+            <div class="arch-connector"></div>
+            <div class="arch-box primary">FastAPI</div>
+            <div class="arch-connector"></div>
+            <div class="arch-box">PostgreSQL + pgvector</div>
+          </div>
+          <div class="arch-vline"></div>
+          <div class="arch-row">
+            <div class="arch-box">Watch folder</div>
+            <div class="arch-connector"></div>
+            <div class="arch-box primary">LangGraph workflow</div>
+            <div class="arch-connector"></div>
+            <div class="arch-box">MCP server</div>
+          </div>
+          <div class="arch-vline"></div>
+          <div class="arch-row">
+            <div class="arch-box">Sentence transformers</div>
+            <div class="arch-connector"></div>
+            <div class="arch-box primary">Groq LLM</div>
+            <div class="arch-connector"></div>
+            <div class="arch-box">Examine validator</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h4>Technology stack</h4>
+        <div class="tech-grid">
+          <span class="tech-chip">React</span>
+          <span class="tech-chip">Vite</span>
+          <span class="tech-chip">FastAPI</span>
+          <span class="tech-chip">Python</span>
+          <span class="tech-chip">LangGraph</span>
+          <span class="tech-chip">PostgreSQL</span>
+          <span class="tech-chip">pgvector</span>
+          <span class="tech-chip">sentence-transformers</span>
+          <span class="tech-chip">Groq</span>
+          <span class="tech-chip">MCP</span>
+          <span class="tech-chip">Streamable HTTP</span>
+          <span class="tech-chip">unittest</span>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h4>Verification status</h4>
+        <table class="verify-table">
+          <thead><tr><th>Area</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Backend tests</td><td><span class="status-pass">Pass</span></td></tr>
+            <tr><td>Frontend build</td><td><span class="status-pass">Pass</span></td></tr>
+            <tr><td>Human review flow</td><td><span class="status-pass">Pass</span></td></tr>
+            <tr><td>Incremental conflict update</td><td><span class="status-pass">Pass</span></td></tr>
+            <tr><td>Concurrent isolation</td><td><span class="status-pass">Pass</span></td></tr>
+            <tr><td>Crash and resume</td><td><span class="status-pass">Pass</span></td></tr>
+            <tr><td>Metrics and cost accounting</td><td><span class="status-pass">Pass</span></td></tr>
+            <tr><td>Prompt injection defense</td><td><span class="status-pass">Pass</span></td></tr>
+            <tr><td>Watch folder</td><td><span class="status-warn">UTF-8 txt only</span></td></tr>
+            <tr><td>MCP interface</td><td><span class="status-warn">Environment-dependent</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="detail-section">
+        <h4>Design principle</h4>
+        <div class="quote-block">
+          <p>The LLM proposes. The evidence grounds. The database preserves. The conflict layer challenges. The human decides.</p>
+          <div class="attrib">Core architectural philosophy</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Growth Machine Detail -->
+  <div class="project-detail" id="detail-growth">
+    <div class="detail-panel">
+      <h2>Growth Machine</h2>
+      <p class="subtitle">Evidence-driven outbound research & personalization system</p>
+
+      <div class="detail-section">
+        <h4>What I built</h4>
+        <p>An evidence-driven growth machine for a narrow audience: <strong>B2B SaaS documentation and support teams</strong> with public evidence of multilingual, HTML/help-content, template-driven, or other document-heavy workflows.</p>
+        <p>The machine ingests public company evidence, validates the inputs, detects workflow signals, forms a grounded pain hypothesis, maps only supported SuperDocs capabilities, scores the opportunity, and produces a personalized research/outreach artifact for human review.</p>
+      </div>
+
+      <div class="detail-section">
+        <h4>Core workflow</h4>
+        <div class="pipeline">
+          <span class="pipe-step">Public evidence</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-step">Validation</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-step">Workflow inference</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-step">Pain hypothesis</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-step">Capability mapping</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-step">Qualification</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-step">Personalization</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-step">Human review</span>
+          <span class="pipe-arrow">→</span>
+          <span class="pipe-step">Measurement</span>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h4>Key decisions</h4>
+        <div class="features-grid">
+          <div class="feat-item">
+            <h5>Narrow audience</h5>
+            <p>Deliberately scoped to B2B SaaS documentation and support teams rather than building a generic lead-generation system.</p>
+          </div>
+          <div class="feat-item">
+            <h5>Evidence foundation</h5>
+            <p>Every qualification decision is grounded in public evidence. The system separates what evidence actually shows from inferred hypotheses.</p>
+          </div>
+          <div class="feat-item">
+            <h5>Stops before outreach</h5>
+            <p>The primary channel is outbound research and personalization, but the system stops before sending any outreach.</p>
+          </div>
+          <div class="feat-item">
+            <h5>What was cut</h5>
+            <p>Automated outreach, private contact enrichment, unrestricted lead scraping, and unsupported product claims were intentionally excluded.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h4>Qualification signals</h4>
+        <div class="pipeline">
+          <span class="pipe-step">HTML/help-center workflows</span>
+          <span class="pipe-step">Document editing & revision</span>
+          <span class="pipe-step">Repetitive document processes</span>
+          <span class="pipe-step">Template-driven generation</span>
+          <span class="pipe-step">Localization & multilingual</span>
+          <span class="pipe-step">API document processing</span>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h4>Measurement & validation</h4>
+        <p>The system records discovery count, evidence coverage, qualification rate, fit bands, input fingerprint, and timestamp. Two fresh development runs were executed against different evidence batches. Both produced evidence-backed target records, fit scores, workflow hypotheses, matched capabilities, and personalized artifacts <strong>without requiring a code change between runs</strong>.</p>
+      </div>
+
+      <div class="detail-section">
+        <h4>Human loop</h4>
+        <p>The output is intentionally a research artifact, not an autonomous sales action. A human must verify: evidence, workflow interpretation, qualification, product-fit claims, personalization, and whether outreach is appropriate. <strong>The application cannot send outreach.</strong></p>
+      </div>
+
+      <div class="detail-section">
+        <h4>Honest limitations</h4>
+        <p>Public evidence is a signal, not inside information. A public feature or workflow does not prove that the company has the hypothesized pain. Workflow inference can be wrong, evidence can become stale, and personalization can still require refinement.</p>
+        <p>The next meaningful metric would be the percentage of qualified artifacts that a human reviewer considers sufficiently specific and credible to use.</p>
+      </div>
+
+      <div class="detail-section">
+        <h4>Design principle</h4>
+        <div class="quote-block" style="border-left-color: #7c3aed;">
+          <p>Evidence before inference. Inference before qualification. Qualification before personalization. Human review before action.</p>
+          <div class="attrib">Core architectural philosophy</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About -->
+<section class="section" id="about" style="border-top: 1px solid var(--border);">
+  <div class="section-title">Engineering principles</div>
+  <div class="features-grid">
+    <div class="feat-item">
+      <h5>Evidence before inference</h5>
+      <p>Every system decision is grounded in observable data. The LLM proposes; the evidence grounds.</p>
+    </div>
+    <div class="feat-item">
+      <h5>Human in the loop</h5>
+      <p>Conflict detection and qualification gates require explicit human review before any action is taken.</p>
+    </div>
+    <div class="feat-item">
+      <h5>Deterministic where possible</h5>
+      <p>Structured facts, deterministic chunking, and explicit change records reduce variability and increase trust.</p>
+    </div>
+    <div class="feat-item">
+      <h5>Honest limitations</h5>
+      <p>Every system documents what it cannot do, what it assumes, and what would need to change for production scale.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <p>Built with evidence-grounded engineering. DocTask & Growth Machine.</p>
+</footer>
+
+<script>
+function showProject(id) {
+  // Hide all details
+  document.querySelectorAll('.project-detail').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.project-card').forEach(el => el.classList.remove('active'));
+
+  // Show selected
+  document.getElementById('detail-' + id).classList.add('active');
+  document.getElementById('card-' + id).classList.add('active');
+
+  // Scroll to detail
+  document.getElementById('detail-' + id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Show DocTask by default on load
+window.addEventListener('DOMContentLoaded', () => {
+  showProject('doctask');
+});
+</script>
+
+</body>
+</html>
